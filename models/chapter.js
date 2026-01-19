@@ -1,0 +1,56 @@
+'use strict';
+const { Model } = require('sequelize');
+
+module.exports = (sequelize, DataTypes) => {
+  class Chapter extends Model {
+    static associate(models) {
+      Chapter.belongsTo(models.Book, {
+        foreignKey: 'bookId',
+        as: 'book',
+        onDelete: 'CASCADE',
+      });
+    }
+  }
+
+  Chapter.init(
+    {
+      id: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+        allowNull: false,
+      },
+
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+
+      content: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+
+      order: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+
+      bookId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        references: {
+          model: 'Books',
+          key: 'id',
+        },
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Chapter',
+      tableName: 'Chapters',
+      timestamps: true,
+    }
+  );
+
+  return Chapter;
+};
