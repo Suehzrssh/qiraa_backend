@@ -5,7 +5,8 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 
-const config = require(__dirname + '/../config/config.js'); // load config.js (already env-aware)
+const env = process.env.NODE_ENV || 'development';
+const config = require(path.join(__dirname, '/../config/config.js'))[env]; // Load env-specific config
 const db = {};
 
 let sequelize;
