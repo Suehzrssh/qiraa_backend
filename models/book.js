@@ -22,10 +22,9 @@ module.exports = (sequelize, DataTypes) => {
   Book.init(
     {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false,
-        autoIncrement: true,
       },
 
       title: {

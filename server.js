@@ -22,7 +22,7 @@ app.use("/books", bookRouter);
 app.use("/", chapterRouter);
 
 // Sync DB and start server
-db.sequelize.sync({ force: true })  // alter: true updates tables without dropping
+db.sequelize.sync({ alter: true })  // alter: true updates tables without dropping
   .then(() => {
     console.log('Database synced successfully.');
     app.listen(port, () => {
