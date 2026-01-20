@@ -5,8 +5,9 @@ module.exports = {
     // Create table Books
     await queryInterface.createTable('Books', {
       id: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
       },
       title: {

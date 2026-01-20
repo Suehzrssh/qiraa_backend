@@ -15,8 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   Chapter.init(
     {
       id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false,
       },
 
@@ -36,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       },
 
       bookId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: 'Books',

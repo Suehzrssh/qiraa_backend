@@ -1,26 +1,21 @@
 const { Book, Genre, Chapter } = require('../models');
 
 module.exports = {
-
-  // GET /books
   async getAllBooks(req, res) {
     try {
       const books = await Book.findAll({
         include: {
           model: Genre,
           as: 'genre',
-          attributes: ['id', 'name'], // ❗ title değil name
+          attributes: ['id', 'title'],
         },
       });
-
       res.json(books);
     } catch (err) {
-      console.error(err);
       res.status(500).json({ error: 'Server error' });
     }
   },
 
-  // GET /books/:id
   async getBookById(req, res) {
     try {
       const book = await Book.findByPk(req.params.id, {
@@ -34,27 +29,21 @@ module.exports = {
           {
             model: Genre,
             as: 'genre',
-            attributes: ['id', 'name'],
+            attributes: ['id', 'title'],
           },
         ],
       });
 
-      if (!book) {
-        return res.status(404).json({ error: 'Book not found' });
-      }
-
+      if (!book) return res.status(404).json({ error: 'Book not found' });
       res.json(book);
-    } catch (err) {
-      console.error(err);
+    } catch {
       res.status(500).json({ error: 'Server error' });
     }
   },
 
-  // POST /books
   async createBook(req, res) {
     try {
       const {
-        id,            // ❗ MANUEL ID
         title,
         author,
         info,
@@ -65,10 +54,8 @@ module.exports = {
         genreId,
       } = req.body;
 
-      if (!id || !title || !author || !genreId) {
-        return res.status(400).json({
-          error: 'id, title, author and genreId are required',
-        });
+      if (!title || !author || !genreId) {
+        return res.status(400).json({ error: 'Title, author and genre are required' });
       }
 
       const genre = await Genre.findByPk(genreId);
@@ -77,7 +64,6 @@ module.exports = {
       }
 
       const book = await Book.create({
-        id,
         title,
         author,
         info,
@@ -95,51 +81,30 @@ module.exports = {
     }
   },
 
-  // DELETE /books/:id
   async deleteBook(req, res) {
-    try {
-      const deleted = await Book.destroy({
-        where: { id: req.params.id },
-      });
-
-      if (!deleted) {
-        return res.status(404).json({ error: 'Book not found' });
-      }
-
-      res.json({ message: 'Book deleted' });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Server error' });
-    }
+    const deleted = await Book.destroy({ where: { id: req.params.id } });
+    if (!deleted) return res.status(404).json({ error: 'Book not found' });
+    res.json({ message: 'Book deleted' });
   },
 
-  // GET /books/:id/read
   async readFullBook(req, res) {
-    try {
-      const book = await Book.findByPk(req.params.id, {
-        include: [
-          {
-            model: Chapter,
-            as: 'chapters',
-            separate: true,
-            order: [['order', 'ASC']],
-          },
-          {
-            model: Genre,
-            as: 'genre',
-            attributes: ['id', 'name'],
-          },
-        ],
-      });
+    const book = await Book.findByPk(req.params.id, {
+      include: [
+        {
+          model: Chapter,
+          as: 'chapters',
+          separate: true,
+          order: [['order', 'ASC']],
+        },
+        {
+          model: Genre,
+          as: 'genre',
+          attributes: ['id', 'title'],
+        },
+      ],
+    });
 
-      if (!book) {
-        return res.status(404).json({ error: 'Book not found' });
-      }
-
-      res.json(book);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Server error' });
-    }
+    if (!book) return res.status(404).json({ error: 'Book not found' });
+    res.json(book);
   },
 };

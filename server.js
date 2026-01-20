@@ -17,18 +17,16 @@ const genreRouter = require("./routes/genreRouter.js");
 const bookRouter = require("./routes/bookRouter.js");
 const chapterRouter = require("./routes/chapterRouter.js");
 
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'server is ok' });
+});
+
 app.use("/genres", genreRouter);
 app.use("/books", bookRouter);
 app.use("/", chapterRouter);
 
-// Sync DB and start server
-db.sequelize.sync({ alter: true })  // alter: true updates tables without dropping
-  .then(() => {
-    console.log('Database synced successfully.');
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-    });
-  })
-  .catch(err => {
-    console.error('Failed to sync database:', err);
-  });
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
