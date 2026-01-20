@@ -26,6 +26,10 @@ app.use("/genres", genreRouter);
 app.use("/books", bookRouter);
 app.use("/", chapterRouter);
 
+db.sequelize.authenticate()
+  .then(() => console.log("✅ DB connected"))
+  .catch(err => console.error("❌ DB error", err));
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
