@@ -51,8 +51,13 @@ module.exports = {
   },
 
   async deleteChapter(req, res) {
-    const deleted = await Chapter.destroy({ where: { id: req.params.id } });
-    if (!deleted) return res.status(404).json({ error: 'Chapter not found' });
-    res.json({ message: 'Chapter deleted' });
-  },
+  const deleted = await Chapter.destroy({ 
+    where: { 
+      id: req.params.id,
+      bookId: req.params.bookId
+    } 
+  });
+  if (!deleted) return res.status(404).json({ error: 'Chapter not found' });
+  res.json({ message: 'Chapter deleted' });
+}
 };
